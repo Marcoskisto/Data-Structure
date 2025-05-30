@@ -1,0 +1,42 @@
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Angular build output
+dist/
+out-tsc/
+
+# Angular cache
+.angular/cache/
+.angular/config.json
+
+# IDEs e editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos temporários e de sistema
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Arquivos de ambiente
+.env
+.env.*.local
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Compilação do TypeScript
+*.tsbuildinfo
+
+# Arquivos de produção
+*.tgz
+
+# Git
+.git/

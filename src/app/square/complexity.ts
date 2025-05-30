@@ -1,0 +1,54 @@
+export interface Complexity {
+  bestCount: number;
+  averageCount: number;
+  worstCount: number | null;
+  bestFormula: string;
+  averageFormula: string;
+  worstFormula: string | null;
+  bigO: string
+}
+
+export function getInsertComplexity(n: number): Complexity {
+  // T(n) ≈ n (comparações, 0 movimentos)
+  // T(n) ≈ n²/4 + n²/4 = n²/2 (comparações + movimentos)     
+  // T(n) ≈ n²/2 + n²/2 = n² (comparações + movimentos)       
+  // O(n) / O(n²)  
+  return {
+    bestCount: n,
+    averageCount: (n**2)/2,
+    worstCount: n**2,
+    bestFormula: 'T(n) ≈ n',
+    averageFormula: 'T(n) ≈ n²/2',
+    worstFormula: 'T(n) ≈ n²',
+    bigO: 'O(n) / O(n²)'
+  }
+}
+
+export function getSelectComplexity(n: number): Complexity {
+  // T(n) ≈ n²/2 + n (comparações + trocas)              
+  // T(n) ≈ n²/2 + n (comparações + trocas)
+  // T(n) ≈ n²/2 + n (comparações + trocas)                   
+  // O(n²)                     
+  
+  return {
+    bestCount: (n**2)/2 + n,
+    averageCount: (n**2)/2 + n,
+    worstCount: (n**2)/2 + n,
+    bestFormula: 'T(n) ≈ n²/2 + n',
+    averageFormula: 'T(n) ≈ n²/2 + n',
+    worstFormula: 'T(n) ≈ n²/2 + n',
+    bigO: 'O(n²)'
+  }
+}
+
+export function getsShellComplexity(n: number): Complexity {
+  return {
+    bestCount: Math.round(n * Math.log2(n)),
+    averageCount: Math.round(1.2*Math.pow(n, 1.5)),
+    worstCount: null,
+    bestFormula: 'T(n) ≈ n log₂(n)',
+    averageFormula: 'T(n) ≈ n^1.5',
+    worstFormula: null,
+    bigO: 'O(n log n) / O(n¹·⁵)'
+  }
+}
