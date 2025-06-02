@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { DelayService } from '../delay.service';
+import { DelayService } from './delay.service/delay.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'square',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './square.component.html',
   styleUrl: './square.component.css'
 })
@@ -20,6 +21,9 @@ export class SquareComponent {
 
     @Input()
     color: string | undefined;
+
+    @Input()
+    squareWidth: number = 60;
 }
 
 export class SquareData {
@@ -41,7 +45,6 @@ export class SquareData {
     newSquare.value = this.value;
     newSquare.color = this.color;
     return newSquare;
-
   }
 
   async setValue(value: number) {
@@ -93,7 +96,11 @@ export class SquareData {
   }
 
   
-  isGT(other: SquareComponent): boolean {
+  isGT(other: SquareData): boolean {
     return this.value > other.value;
+  }
+
+  isLT(other: SquareData): boolean {
+    return this.value < other.value;
   }
 }

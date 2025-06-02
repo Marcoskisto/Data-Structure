@@ -4,13 +4,12 @@
 }
 .board {
     position: relative;
-    height: 700px;
+    height: 720px;
     width: 1500px;
     border: 1px solid #ccc;
   }
 
 .speed {
-  gap: 10px;
   display: flex;
   align-items: center;
   width: 300px;

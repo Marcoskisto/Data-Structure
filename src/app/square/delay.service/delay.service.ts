@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const minDelay = 50;
+const minDelay = 5;
 const maxDelay = 1000;
 
 @Injectable({
@@ -11,7 +11,6 @@ export class DelayService {
   constructor() { }
 
   private setDelay(ms: number) {
-    console.log(ms)
     this.currentDelay = ms;
   }
 

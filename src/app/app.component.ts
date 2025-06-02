@@ -1,9 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, linkedSignal, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SquareComponent, SquareData } from './square/square.component';
 import { FormsModule } from '@angular/forms';
-import { DelayService } from './delay.service';
+import { DelayService } from './square/delay.service/delay.service';
 import { Complexity, getInsertComplexity, getSelectComplexity, getsShellComplexity } from './square/complexity';
+
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,14 +17,19 @@ import { Complexity, getInsertComplexity, getSelectComplexity, getsShellComplexi
 export class AppComponent implements AfterViewInit {
   newValue: number | undefined;
   inSort: SquareData | undefined;
-  auxA: SquareData | undefined;
-  auxB: SquareData | undefined;
   isRunning: boolean = false;
   speed: number = 50;
   complexity!: Complexity;
   complexityCounter: number = 0;
-  
-  squares: SquareData[] = []
+  squares: SquareData[] = [];
+  squaresLength: number = 20;
+  minValue: number = 5;
+  maxValue: number = 700;
+  minSquaresQty: number = 10;
+  maxSquaresQty: number = 100;
+  squareWidth: number = 60;
+
+  @ViewChild('boardRef', { static: true }) boardRef!: ElementRef<HTMLDivElement>;
 
   constructor(
     private delayService: DelayService,
@@ -41,8 +48,8 @@ export class AppComponent implements AfterViewInit {
   reset() {
     this.inSort = undefined;
     this.clear();
-    for (let i=0; i < 20; i++){
-      let newValue = Math.floor(Math.random() * (220)) + 5
+    for (let i=0; i < this.squaresLength; i++){
+      let newValue = Math.floor(Math.random() * (this.maxValue)) + this.minValue
       this.add(newValue);
       this.cdRef.detectChanges();
     }
@@ -52,17 +59,35 @@ export class AppComponent implements AfterViewInit {
     this.delayService.setSpeed(this.speed);
   }
 
+  updateSquaresLength() {
+    let diff: number = this.squaresLength - this.squares.length;
+      while(diff > 0) {
+        this.add(Math.floor(Math.random() * (this.maxValue)) + this.minValue);
+        diff = this.squaresLength - this.squares.length;
+      }
+      while(diff < 0) {
+        this.squares.pop();
+        diff = this.squaresLength - this.squares.length;
+      }
+      this.adjustSquareSize();
+  }
+
+  private adjustSquareSize() {
+    const containerWidth: number = this.boardRef?.nativeElement?.offsetWidth;
+    this.squareWidth = containerWidth / (this.squaresLength+2);
+  }
+  
   async finish() {
     const length = this.squares.length;
-    const gap = 3;
+    const gap = Math.floor(length/5);
     const limit = length+gap;
     this.inSort = undefined;
     for(let i=0; i<limit; i++) {
       if(i<length){
-        await this.squares[i].setAsSorted(10);
+        await this.squares[i].setAsSorted(15/(this.squaresLength/10));
       }
       if(i>=gap) {
-        await this.squares[i-gap].setAsUnsorted(20);
+        await this.squares[i-gap].setAsUnsorted(30/(this.squaresLength/10));
       }
     }
     this.isRunning = false;
@@ -107,22 +132,26 @@ export class AppComponent implements AfterViewInit {
     let i;
     for(j=1; j < lenght; j++) {
       this.complexityCounter++;
-      this.inSort = this.squares[j];
       this.squares[j].setAsSelected();
-      this.inSort.setPosition(lenght+1);
+      this.inSort = await this.squares[j].clone();
 
       for (i=j-1; i >= 0 && this.squares[i].isGT(this.inSort); i--) {
         this.complexityCounter++;
-        this.squares[i].setAsSelected();
+        await this.inSort.setPosition(lenght+1);
+
+        await this.squares[i].setAsSelected(true);
         this.complexityCounter++;
-        this.squares[i+1] = this.squares[i];
-        await this.squares[i+1].setPosition(i+1);
-        this.squares[i+1].setAsUnsorted();
+        this.squares[i+1] = await this.squares[i].clone();
+        Promise.all([
+          this.squares[i+1].setPosition(i+1),
+          this.squares[i].setAsUnsorted(),
+          this.squares[i+1].setAsUnsorted()
+        ])
       }
-      await this.inSort.setPosition(i+1);
-      await this.inSort.setAsUnsorted();
-      this.squares[i+1] = this.inSort;
+      this.squares[i+1] = await this.inSort.clone();
       this.inSort = undefined;
+      await this.squares[i+1].setPosition(i+1);
+      await this.squares[i+1].setAsUnsorted();
     }
     await this.finish();
   }
@@ -133,23 +162,23 @@ export class AppComponent implements AfterViewInit {
   }
 
   async shellKnuth() {
-    let h: number
+    let h: number;
     for(h = 1; h < this.squares.length; h = 3 * h + 1){}
 
     await this.shellSort(h, (h: number) => (h-1)/3);
   }
 
   async shellSort(h: number, getGap: Function) {
-    this.start()
+    this.start();
     this.complexity = getsShellComplexity(this.squares.length)
-    let i, j
-    const lenght = this.squares.length    
+    let i, j;
+    const lenght = this.squares.length;   
     do {
-      h = getGap(h)
+      h = getGap(h);
 
       for(i = h; i < lenght; i++) {
         this.complexityCounter++;
-        this.inSort = this.squares[i];
+        this.inSort = await this.squares[i].clone();
         
         await Promise.all([
           this.squares[i].setAsSelected(),
@@ -212,38 +241,67 @@ export class AppComponent implements AfterViewInit {
     await this.finish()
   }
 
-  async shellSort2() {
-    let i, j, h;
-    let aux: SquareData;
-    const lenght = this.squares.length
-    for(h = 1; h < lenght; h = 3 * h + 1){}
-    do {
-      h = (h-1)/3;
-      for(i = h; i < lenght; i++) {
-        aux = this.squares[i];
-        j = i;
-        while(j >= h && this.squares[j-h].isGT(aux)) {
-          await Promise.all([
-            this.squares[j].setAsSelected(),
-            this.squares[j-h].setAsSelected()
-          ])
-          await this.squares[j].setPosition(lenght+2)
-          await this.squares[j-h].setPosition(j);
-          await this.squares[j-h].setAsUnsorted();
-          this.squares[j] = await this.squares[j-h].clone();
-          j -= h;
-        }
-        this.squares[j] = aux;
-        await this.squares[j].setPosition(j)
-        await this.squares[j].setAsUnsorted()
-      }
-    } while(h != 1)
-    console.log(this.squares)
+  async handleMergeSort() {
+    await this.start()
+    await this.mergeSort(this.squares, 0, this.squares.length-1)
+    await this.finish()
   }
 
-  async mergeSort() {
-    alert("Not implemented"); 
+  async mergeSort(arr: SquareData[], left: number, right: number) {
+    if (left >= right) return;
+    const middle = Math.floor(left + (right - left)/2);
+    await this.mergeSort(arr, left, middle);
+    await this.mergeSort(arr, middle + 1, right);
+    await this.merge(arr, left,  middle, right);
   }
+
+  async merge(arr: SquareData[], left: number, middle: number, right: number) {
+
+    for(let i = 0; i < arr.length; i++) {
+      if(i < left || i > right) {
+        arr[i].setAsUnsorted();
+      } else {
+        arr[i].setAsSelected();
+      }
+    }
+
+    const leftArr: SquareData[] = arr.slice(left, middle + 1);
+    const rightArr: SquareData[] = arr.slice(middle + 1, right + 1);
+
+    let i = left;
+    let indexL: number = 0;
+    let indexR: number = 0;
+
+    while(indexL < leftArr.length && indexR < rightArr.length) {
+      
+      if (leftArr[indexL].isLT(rightArr[indexR])) {
+        arr[i] = await leftArr[indexL].clone();
+        arr[i].setPosition(i);
+        indexL++;
+
+      } else {
+        arr[i] = await rightArr[indexR].clone();
+        arr[i].setPosition(i);
+        indexR++;
+      }
+      i++;
+    }
+
+    while(indexL < leftArr.length) {
+      arr[i] = await leftArr[indexL].clone();
+      arr[i].setPosition(i);
+      indexL++;
+      i++;
+    }
+
+    while(indexR < rightArr.length) {
+      arr[i] = await rightArr[indexR].clone();
+      arr[i].setPosition(i);
+      indexR++;
+      i++;
+    }
+  }
+
   async quickSort() {
     alert("Not implemented");
   }

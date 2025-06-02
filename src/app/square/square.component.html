@@ -1,8 +1,11 @@
 <div 
   class="square" 
-  [style.transform]="'translateX('+ position*61 + 'px)'" 
+  [style.transform]="'translateX('+ position*squareWidth + 'px)'" 
   [style.backgroundColor]="color"
-  [style.height]="value*3+'px'"
+  [style.height.px]="value"
+  [style.width.px]="squareWidth"
 >
-    {{value}}
+    <ng-container *ngIf="squareWidth > 40">
+      {{value}}
+    </ng-container>
 </div>

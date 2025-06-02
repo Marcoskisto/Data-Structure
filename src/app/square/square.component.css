@@ -1,19 +1,14 @@
-
 .square {
     position: absolute;
-    gap: 10px;
-    margin: 5px;
     border: 1px;
     border-style: solid;
-    bottom: 25px;
-    width: 60px;
-    color: white;
+    bottom: 5px;
+    color: #ffffff;
     opacity: 90%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: Georgia;
     font-size: x-large;
-    border-radius: 5px 10px 0px 0px;
     transition: transform 0.3s ease, background-color 0.1s ease-in-out, height 0.5s ease;
   }
