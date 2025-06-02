@@ -18,7 +18,7 @@ export class AppComponent implements AfterViewInit {
   newValue: number | undefined;
   inSort: SquareData | undefined;
   isRunning: boolean = false;
-  speed: number = 50;
+  speed: number = 70;
   complexity!: Complexity;
   complexityCounter: number = 0;
   squares: SquareData[] = [];
