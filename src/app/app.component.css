@@ -1,21 +1,40 @@
 .screen {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
+
+.header {
+  margin-left: 5%;
+}
+
 .board {
-    position: relative;
-    height: 720px;
-    width: 1500px;
-    border: 1px solid #ccc;
-  }
+  position: relative;
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  width: 95%;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
 
 .speed {
   display: flex;
   align-items: center;
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .speed label {
   white-space: nowrap;
   min-width: 80px;
+}
+
+.controls-container {
+  flex-shrink: 0;
 }

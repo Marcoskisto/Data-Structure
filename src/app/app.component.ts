@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SquareComponent, SquareData } from './square/square.component';
 import { FormsModule } from '@angular/forms';
 import { DelayService } from './square/delay.service/delay.service';
-import { Complexity, getInsertComplexity, getSelectComplexity, getsShellComplexity } from './square/complexity';
+import { Complexity, getInsertComplexity, getSelectComplexity, getsMergeComplexity, getsShellComplexity } from './square/complexity';
 
 
 @Component({
@@ -73,7 +73,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   private adjustSquareSize() {
-    const containerWidth: number = this.boardRef?.nativeElement?.offsetWidth;
+    const containerWidth: number = this.boardRef?.nativeElement?.offsetWidth - 100;
     this.squareWidth = containerWidth / (this.squaresLength+2);
   }
   
@@ -232,7 +232,7 @@ export class AppComponent implements AfterViewInit {
         this.squares[i].setPositionDelayAfter(min),
         temp.setPositionDelayAfter(i)
       ])
-      this.complexityCounter++
+      // this.complexityCounter++
       this.squares[min] = this.squares[i];   
       this.squares[i].setAsUnsorted(),
       temp.setAsUnsorted()
@@ -242,6 +242,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   async handleMergeSort() {
+    this.complexity = getsMergeComplexity(this.squaresLength)
     await this.start()
     await this.mergeSort(this.squares, 0, this.squares.length-1)
     await this.finish()
@@ -273,7 +274,7 @@ export class AppComponent implements AfterViewInit {
     let indexR: number = 0;
 
     while(indexL < leftArr.length && indexR < rightArr.length) {
-      
+      this.complexityCounter++;
       if (leftArr[indexL].isLT(rightArr[indexR])) {
         arr[i] = await leftArr[indexL].clone();
         arr[i].setPosition(i);
@@ -288,6 +289,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     while(indexL < leftArr.length) {
+      this.complexityCounter++;
       arr[i] = await leftArr[indexL].clone();
       arr[i].setPosition(i);
       indexL++;
@@ -295,6 +297,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     while(indexR < rightArr.length) {
+      this.complexityCounter++;
       arr[i] = await rightArr[indexR].clone();
       arr[i].setPosition(i);
       indexR++;

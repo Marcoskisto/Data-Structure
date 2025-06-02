@@ -1,9 +1,9 @@
 export interface Complexity {
-  bestCount: number;
-  averageCount: number;
+  bestCount: number | null;
+  averageCount: number | null;
   worstCount: number | null;
-  bestFormula: string;
-  averageFormula: string;
+  bestFormula: string | null;
+  averageFormula: string | null;
   worstFormula: string | null;
   bigO: string
 }
@@ -51,4 +51,18 @@ export function getsShellComplexity(n: number): Complexity {
     worstFormula: null,
     bigO: 'O(n log n) / O(n¹·⁵)'
   }
+}
+
+export function getsMergeComplexity(n: number): Complexity {
+  const log2n = Math.log2(n);
+
+  return {
+    bestCount: null,
+    averageCount: Math.round(n * log2n),
+    worstCount: null,
+    bestFormula: null,
+    averageFormula: 'T(n) ≈ n log₂n',
+    worstFormula: null,
+    bigO: 'O(n log n)'
+  };
 }
