@@ -1,5 +1,7 @@
 # Structture Data
 
+A visual way to study data structure.
+
 See working: https://marcoskisto.github.io/Data-Structure/
 
 # Dev
