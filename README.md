@@ -1,8 +1,7 @@
 # Structture Data
+Interactive data structure in TypeScript/angular, in order to provide a visual way to study the data structure.
 
-A visual way to study data structure.
-
-See working: https://marcoskisto.github.io/Data-Structure/
+See the working page: https://marcoskisto.github.io/Data-Structure/
 
 # Dev
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
