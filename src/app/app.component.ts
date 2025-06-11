@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SquareComponent, SquareData } from './square/square.component';
 import { FormsModule } from '@angular/forms';
 import { DelayService } from './square/delay.service/delay.service';
-import { Complexity, getInsertComplexity, getSelectComplexity, getsMergeComplexity, getsShellComplexity } from './square/complexity';
+import { Complexity, getInsertComplexity, getQuickComplexity, getSelectComplexity, getsMergeComplexity, getsShellComplexity } from './square/complexity';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class AppComponent implements AfterViewInit {
   newValue: number | undefined;
   inSort: SquareData | undefined;
   isRunning: boolean = false;
-  speed: number = 70;
+  speed: number = 60;
   complexity!: Complexity;
   complexityCounter: number = 0;
   squares: SquareData[] = [];
@@ -26,7 +26,7 @@ export class AppComponent implements AfterViewInit {
   minValue: number = 5;
   maxValue: number = 700;
   minSquaresQty: number = 10;
-  maxSquaresQty: number = 100;
+  maxSquaresQty: number = 150;
   squareWidth: number = 60;
 
   @ViewChild('boardRef', { static: true }) boardRef!: ElementRef<HTMLDivElement>;
@@ -39,6 +39,7 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.reset();
+    this.updateDelay()
   }
 
   clear() {
@@ -73,8 +74,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   private adjustSquareSize() {
+    const defaultWidth = 60;
     const containerWidth: number = this.boardRef?.nativeElement?.offsetWidth - 100;
-    this.squareWidth = containerWidth / (this.squaresLength+2);
+    const newSquareWidth = containerWidth / (this.squaresLength+2);
+    this.squareWidth = newSquareWidth > defaultWidth ? defaultWidth: newSquareWidth;
   }
   
   async finish() {
@@ -135,7 +138,7 @@ export class AppComponent implements AfterViewInit {
       this.squares[j].setAsSelected();
       this.inSort = await this.squares[j].clone();
 
-      for (i=j-1; i >= 0 && this.squares[i].isGT(this.inSort); i--) {
+      for (i=j-1; i >= 0 && this.squares[i].isGt(this.inSort); i--) {
         this.complexityCounter++;
         await this.inSort.setPosition(lenght+1);
 
@@ -186,7 +189,7 @@ export class AppComponent implements AfterViewInit {
         ])
         await this.squares[i-h].setAsUnsorted();
         
-        for(j=i; j >= h && this.squares[j-h].isGT(this.inSort); j-=h) {
+        for(j=i; j >= h && this.squares[j-h].isGt(this.inSort); j-=h) {
           this.complexityCounter++;
           this.squares[j] = this.squares[j-h];
           this.squares[j].setAsSelected();
@@ -217,7 +220,7 @@ export class AppComponent implements AfterViewInit {
       for(j=i+1; j < this.squares.length; j++) {
         this.complexityCounter++
         await this.squares[j].setAsSelected()
-        if(this.squares[min].isGT(this.squares[j])) {
+        if(this.squares[min].isGt(this.squares[j])) {
           if (min != i) {
             await this.squares[min].setAsUnsorted();
           }
@@ -275,7 +278,7 @@ export class AppComponent implements AfterViewInit {
 
     while(indexL < leftArr.length && indexR < rightArr.length) {
       this.complexityCounter++;
-      if (leftArr[indexL].isLT(rightArr[indexR])) {
+      if (leftArr[indexL].isLt(rightArr[indexR])) {
         arr[i] = await leftArr[indexL].clone();
         arr[i].setPosition(i);
         indexL++;
@@ -305,7 +308,87 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  async quickSort() {
-    alert("Not implemented");
+  async handleQuickSort(useRandom: boolean = false) {
+    this.complexity = getQuickComplexity(this.squaresLength);
+    this.start();
+    await this.quickSort(0, this.squaresLength-1, this.squares, useRandom)
+    this.finish();
+  }
+
+  async quickSort(indexL: number, indexR: number, arr: SquareData[], useRandom: boolean) {
+
+    if (indexL < indexR) {
+      const pivoIndex: number = useRandom 
+        ? await this.partitionRandom(indexL, indexR, arr)
+        : await this.partition(indexL, indexR, arr);
+      await this.quickSort(indexL, pivoIndex - 1, arr, useRandom);
+      await this.quickSort(pivoIndex + 1, indexR, arr, useRandom);
+    }
+  }
+  async quickSortRandom(indexL: number, indexR: number, arr: SquareData[]) {
+
+    if (indexL < indexR) {
+      const pivoIndex: number = await this.partitionRandom(indexL, indexR, arr);
+      await this.quickSortRandom(indexL, pivoIndex - 1, arr);
+      await this.quickSortRandom(pivoIndex + 1, indexR, arr);
+    }
+  }
+
+  async partitionRandom(indexL: number, indexR: number, arr: SquareData[]) {
+    const i: number =   Math.floor(Math.random() * (indexR - indexL + 1)) + indexL;
+    await Promise.all([
+      arr[indexR].setAsMarked(),
+      arr[i].setAsMarked()
+    ])
+    await Promise.all([
+      arr[indexR].setPosition(i),
+      arr[i].setPosition(indexR)
+    ])
+    const aux: SquareData = arr[indexR];
+    arr[indexR] = await arr[i].clone();
+    arr[i] = aux;
+    await arr[i].setAsUnsorted();
+    return this.partition(indexL, indexR, arr)
+  }
+
+  async partition(indexL: number, indexR: number, arr: SquareData[]): Promise<number> {
+    let aux: SquareData;
+    await arr[indexR].setAsMarked();
+    const pivo = await arr[indexR];
+    let i:number;
+    let j:number;
+
+    for (i=indexL, j=indexL; i < indexR; i++) {
+      await Promise.all([
+        arr[i].setAsSelected(),
+        arr[j].setAsSelected()
+      ])
+      
+      this.complexityCounter++
+      if (arr[i].isLte(pivo)) {
+        await Promise.all([
+          arr[i].setPosition(j),
+          arr[j].setPosition(i)
+        ])
+        aux = arr[i];
+        arr[i] = await arr[j].clone();
+        arr[j] = aux;
+        await arr[j].setAsUnsorted();
+        j++;
+      }
+     await arr[i].setAsUnsorted();
+    }
+    arr[j].setAsSelected();
+    arr[indexR] = await arr[j].clone();
+    arr[j] = pivo;
+    await Promise.all([
+      arr[indexR].setPosition(indexR),
+      arr[j].setPosition(j)
+    ]);
+    await Promise.all([
+      arr[j].setAsUnsorted(),
+      arr[indexR].setAsUnsorted()
+    ])
+    return j;
   }
 }

@@ -66,3 +66,20 @@ export function getsMergeComplexity(n: number): Complexity {
     bigO: 'O(n log n)'
   };
 }
+
+export function getQuickComplexity(n: number): Complexity {
+  const log2n = Math.log2(n);
+  const bestCount = Math.round(n * log2n);
+  const averageCount = Math.round(n * log2n);
+  const worstCount = Math.round((n ** 2) / 2);
+
+  return {
+    bestCount,
+    averageCount,
+    worstCount,
+    bestFormula: 'T(n) = n log₂(n)',
+    averageFormula: 'T(n) ≈ n log₂(n)',
+    worstFormula: 'T(n) = (n²)/2',
+    bigO: 'O(n log n) / O(n²)'
+  };
+}

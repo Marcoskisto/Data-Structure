@@ -96,11 +96,15 @@ export class SquareData {
   }
 
   
-  isGT(other: SquareData): boolean {
+  isGt(other: SquareData): boolean {
     return this.value > other.value;
   }
 
-  isLT(other: SquareData): boolean {
+  isLt(other: SquareData): boolean {
     return this.value < other.value;
+  }
+
+  isLte(other: SquareData): boolean {
+    return this.value <= other.value;
   }
 }
