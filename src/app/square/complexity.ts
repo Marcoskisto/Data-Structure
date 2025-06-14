@@ -67,12 +67,22 @@ export function getsMergeComplexity(n: number): Complexity {
   };
 }
 
-export function getQuickComplexity(n: number): Complexity {
+export function getQuickComplexity(n: number, isRandom: boolean): Complexity {
   const log2n = Math.log2(n);
   const bestCount = Math.round(n * log2n);
   const averageCount = Math.round(n * log2n);
   const worstCount = Math.round((n ** 2) / 2);
-
+  if(isRandom){
+    return {
+      bestCount: null,
+      averageCount,
+      worstCount: null,
+      bestFormula: null,
+      averageFormula: 'T(n) ≈ n log₂(n)',
+      worstFormula: null,
+      bigO: 'O(n log n)'
+    };
+  }
   return {
     bestCount,
     averageCount,

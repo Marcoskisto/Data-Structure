@@ -68,9 +68,9 @@
         />
       </div>
       <div class="d-flex row ms-4" *ngIf="complexity">
-        <span>Best Case: {{complexity.bestFormula}} = {{complexity.bestCount}}</span>
+        <span *ngIf="complexity.bestFormula">Best Case: {{complexity.bestFormula}} = {{complexity.bestCount}}</span>
         <span>Average Case: {{complexity.averageFormula}} = {{complexity.averageCount}}</span>
-        <span *ngIf="complexity.worstFormula != null">Worst case: {{complexity.worstFormula}} = {{complexity.worstCount}}</span>
+        <span *ngIf="complexity.worstFormula">Worst case: {{complexity.worstFormula}} = {{complexity.worstCount}}</span>
         <span>Big-O: {{complexity.bigO}}</span>
         <span class="fw-bold">Complexity: {{complexityCounter}}</span>
       </div>  

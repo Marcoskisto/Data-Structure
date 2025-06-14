@@ -309,7 +309,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   async handleQuickSort(useRandom: boolean = false) {
-    this.complexity = getQuickComplexity(this.squaresLength);
+    this.complexity = getQuickComplexity(this.squaresLength, useRandom);
     this.start();
     await this.quickSort(0, this.squaresLength-1, this.squares, useRandom)
     this.finish();
