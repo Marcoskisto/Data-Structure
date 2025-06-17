@@ -1,4 +1,4 @@
-# Structture Data
+# Data Structure
 Interactive data structure in TypeScript/angular, in order to provide a visual way to study the data structure.
 
 See the working page: https://marcoskisto.github.io/Data-Structure/
