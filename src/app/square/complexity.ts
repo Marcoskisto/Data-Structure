@@ -1,4 +1,5 @@
 export interface Complexity {
+  title: string | null;
   bestCount: number | null;
   averageCount: number | null;
   worstCount: number | null;
@@ -14,6 +15,7 @@ export function getInsertComplexity(n: number): Complexity {
   // T(n) ≈ n²/2 + n²/2 = n² (comparações + movimentos)       
   // O(n) / O(n²)  
   return {
+    title: "InsertSort",
     bestCount: n,
     averageCount: (n**2)/2,
     worstCount: n**2,
@@ -31,6 +33,7 @@ export function getSelectComplexity(n: number): Complexity {
   // O(n²)                     
   
   return {
+    title: 'SelectSort',
     bestCount: (n**2)/2 + n,
     averageCount: (n**2)/2 + n,
     worstCount: (n**2)/2 + n,
@@ -43,6 +46,7 @@ export function getSelectComplexity(n: number): Complexity {
 
 export function getsShellComplexity(n: number): Complexity {
   return {
+    title: 'ShellSort',
     bestCount: Math.round(n * Math.log2(n)),
     averageCount: Math.round(1.2*Math.pow(n, 1.5)),
     worstCount: null,
@@ -57,6 +61,7 @@ export function getsMergeComplexity(n: number): Complexity {
   const log2n = Math.log2(n);
 
   return {
+    title: 'MergeSort',
     bestCount: null,
     averageCount: Math.round(n * log2n),
     worstCount: null,
@@ -74,6 +79,7 @@ export function getQuickComplexity(n: number, isRandom: boolean): Complexity {
   const worstCount = Math.round((n ** 2) / 2);
   if(isRandom){
     return {
+      title: "QuickSort",
       bestCount: null,
       averageCount,
       worstCount: null,
@@ -84,6 +90,7 @@ export function getQuickComplexity(n: number, isRandom: boolean): Complexity {
     };
   }
   return {
+    title: "QuickSort",
     bestCount,
     averageCount,
     worstCount,

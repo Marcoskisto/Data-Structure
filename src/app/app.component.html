@@ -3,14 +3,13 @@
     <div class="d-flex gap-5">
       <div>
         <div class="btn-group mb-3" role="group" aria-label="Sorting buttons">
-          <button type="button" class="btn btn-outline-secondary" (click)="selectSort()" [disabled]="isRunning">Select</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="insertSort()" [disabled]="isRunning">Insert</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="shellKnuth()" [disabled]="isRunning">Shell(Knuth)</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="shellOriginal()" [disabled]="isRunning">Shell(Original)</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="handleMergeSort()" [disabled]="isRunning">Merge</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="handleQuickSort()" [disabled]="isRunning">QuickSort</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="handleQuickSort(true)" [disabled]="isRunning">Quick(Random)</button>
-
+          <button type="button" class="btn btn-secondary" (click)="selectSort()" [disabled]="isRunning">Select</button>
+          <button type="button" class="btn btn-secondary" (click)="insertSort()" [disabled]="isRunning">Insert</button>
+          <button type="button" class="btn btn-secondary" (click)="shellKnuth()" [disabled]="isRunning">Shell(Knuth)</button>
+          <button type="button" class="btn btn-secondary" (click)="shellOriginal()" [disabled]="isRunning">Shell(Original)</button>
+          <button type="button" class="btn btn-secondary" (click)="handleMergeSort()" [disabled]="isRunning">Merge</button>
+          <button type="button" class="btn btn-secondary" (click)="handleQuickSort()" [disabled]="isRunning">QuickSort</button>
+          <button type="button" class="btn btn-secondary" (click)="handleQuickSort(true)" [disabled]="isRunning">Quick(Random)</button>
         </div>
         
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
@@ -25,24 +24,23 @@
             placeholder="number"
           />
           
-          <button type="button" class="btn btn-outline-secondary" (click)="add(newValue)" [disabled]="isRunning">
+          <button type="button" class="btn btn-secondary" (click)="add(newValue)" [disabled]="isRunning">
             <i class="bi bi-plus"></i>
           </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="clear()" [disabled]="isRunning">
+          <button type="button" class="btn btn-secondary" (click)="clear()" [disabled]="isRunning">
             <i class="bi bi-backspace"></i>
           </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="reset()" [disabled]="isRunning">
+          <button type="button" class="btn btn-secondary" (click)="reset()" [disabled]="isRunning">
             <i class="bi bi-bootstrap-reboot"></i>
           </button>
-          <button type="button" class="btn btn-outline-secondary" (click)="growing()" [disabled]="isRunning">
+          <button type="button" class="btn btn-secondary" (click)="growing()" [disabled]="isRunning">
             <i class="bi bi-sort-up"></i>
           </button>
-          <button type="button" class="btn btn-outline-secondary " (click)="decreasing()" [disabled]="isRunning">
+          <button type="button" class="btn btn-secondary " (click)="decreasing()" [disabled]="isRunning">
             <i class="bi bi-sort-down-alt"></i>
           </button>
         </div>
       </div>
-
       <div>
         <label class="form-label fw-bold mb-0" style="white-space: nowrap;">Qty: {{squaresLength}}</label>
         <input
@@ -78,15 +76,17 @@
   </div>
 
   <div class="board container-fluid px-3 py-2" #boardRef>
-    @if(inSort){
-      <square
-        [position]=inSort.position
-        [id]=inSort.identity
-        [color]=inSort.color
-        [value]=inSort.value 
-        [squareWidth]=squareWidth
-      />
-    }
+    <h1 *ngIf="complexity">
+      {{complexity.title}}
+    </h1>
+    <square *ngIf="inSort"
+      [position]=inSort.position
+      [id]=inSort.identity
+      [color]=inSort.color
+      [value]=inSort.value 
+      [squareWidth]=squareWidth
+    />
+
     @for(square of squares; track square.identity) {
       <square
         [position]=square.position
