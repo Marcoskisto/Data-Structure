@@ -3,6 +3,7 @@ Interactive data structure in TypeScript/angular, in order to provide a visual w
 
 See the working page: https://marcoskisto.github.io/Data-Structure/
 
+![](./mergesort.gif)
 # Dev
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
 
