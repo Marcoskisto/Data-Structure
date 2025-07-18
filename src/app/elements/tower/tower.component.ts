@@ -10,20 +10,27 @@ import { CommonModule } from '@angular/common';
   styleUrl: './tower.component.css'
 })
 export class TowerComponent {
-    @Input() 
-    value: number = 0;
+  heightPercentage: number = 0;
 
-    @Input()
-    identity: number | undefined;
+  ngOnChanges() {
+    const screenHeight = window.innerHeight;
+    this.heightPercentage = (this.value / screenHeight) * 100;
+  }
 
-    @Input()
-    position: number = 0;
+  @Input() 
+  value: number = 0;
 
-    @Input()
-    color: string | undefined;
+  @Input()
+  identity: number | undefined;
 
-    @Input()
-    towerWidth: number = 60;
+  @Input()
+  position: number = 0;
+
+  @Input()
+  color: string | undefined;
+
+  @Input()
+  towerWidth: number = 60;
 }
 
 export class TowerData {

@@ -2,7 +2,7 @@
   class="tower" 
   [style.transform]="'translateX('+ position*towerWidth + 'px)'" 
   [style.backgroundColor]="color"
-  [style.height.px]="value"
+  [style.height.%]="heightPercentage"
   [style.width.px]="towerWidth"
 >
     <ng-container *ngIf="towerWidth > 50">

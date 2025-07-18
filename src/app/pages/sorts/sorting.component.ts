@@ -22,7 +22,7 @@ export class SortingComponent implements AfterViewInit {
   towers: TowerData[] = [];
   towersLength: number = 20;
   minValue: number = 5;
-  maxValue: number = 700;
+  maxValue: number = window.innerHeight - 20;
   minTowersQty: number = 10;
   maxTowersQty: number = 150;
   towerWidth: number = 60;
