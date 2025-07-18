@@ -1,0 +1,11 @@
+<div 
+  class="tower" 
+  [style.transform]="'translateX('+ position*towerWidth + 'px)'" 
+  [style.backgroundColor]="color"
+  [style.height.px]="value"
+  [style.width.px]="towerWidth"
+>
+    <ng-container *ngIf="towerWidth > 50">
+      {{value}}
+    </ng-container>
+</div>

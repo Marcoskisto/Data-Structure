@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { DelayService } from './delay.service/delay.service';
+import { DelayService } from '../../services/delay.service/delay.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'square',
+  selector: 'element-tower',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './square.component.html',
-  styleUrl: './square.component.css'
+  templateUrl: './tower.component.html',
+  styleUrl: './tower.component.css'
 })
-export class SquareComponent {
+export class TowerComponent {
     @Input() 
     value: number = 0;
 
@@ -23,10 +23,10 @@ export class SquareComponent {
     color: string | undefined;
 
     @Input()
-    squareWidth: number = 60;
+    towerWidth: number = 60;
 }
 
-export class SquareData {
+export class TowerData {
   static lastId: number = 0;
 
   identity: number = this.generateId();
@@ -39,12 +39,12 @@ export class SquareData {
   ) { 
     this.setAsUnsorted()
   }
-  async clone(): Promise<SquareData> {
-    const newSquare: SquareData = new SquareData(this.delayService);
-    await newSquare.setPosition(this.position);
-    newSquare.value = this.value;
-    newSquare.color = this.color;
-    return newSquare;
+  async clone(): Promise<TowerData> {
+    const newTowers: TowerData = new TowerData(this.delayService);
+    await newTowers.setPosition(this.position);
+    newTowers.value = this.value;
+    newTowers.color = this.color;
+    return newTowers;
   }
 
   async setValue(value: number) {
@@ -92,19 +92,19 @@ export class SquareData {
   }
 
   private generateId() {
-    return ++SquareData.lastId
+    return ++TowerData.lastId
   }
 
   
-  isGt(other: SquareData): boolean {
+  isGt(other: TowerData): boolean {
     return this.value > other.value;
   }
 
-  isLt(other: SquareData): boolean {
+  isLt(other: TowerData): boolean {
     return this.value < other.value;
   }
 
-  isLte(other: SquareData): boolean {
+  isLte(other: TowerData): boolean {
     return this.value <= other.value;
   }
 }

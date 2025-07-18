@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SquareComponent } from './square.component';
+import { TowerComponent } from './tower.component';
 
 describe('SquareComponent', () => {
-  let component: SquareComponent;
-  let fixture: ComponentFixture<SquareComponent>;
+  let component: TowerComponent;
+  let fixture: ComponentFixture<TowerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SquareComponent]
+      imports: [TowerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SquareComponent);
+    fixture = TestBed.createComponent(TowerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
